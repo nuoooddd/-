@@ -1,0 +1,38 @@
+﻿node_modules/
+node_modules
+
+# IDE
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+target/
+dist/
+*.class
+
+# Redis dump
+dump.rdb
+
+# Temp files
+*.tmp
+*.temp
+
+# Codex/IDE tooling
+.codeartsdoer/
+.arts/
+agents/
+mcp/
+skills/
+specs/
+temp/
+rule/
+settings.json
+
+# MySQL data
+.data/

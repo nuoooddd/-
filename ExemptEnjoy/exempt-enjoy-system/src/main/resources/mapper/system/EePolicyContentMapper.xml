@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exemptenjoy.system.mapper.EePolicyContentMapper">
+    <resultMap type="com.exemptenjoy.system.domain.EePolicyContent" id="EePolicyContentResult">
+        <id property="contentId" column="content_id"/>
+        <result property="policyId" column="policy_id"/>
+        <result property="contentText" column="content_text"/>
+        <result property="keywords" column="keywords"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <select id="selectByPolicyId" parameterType="Long" resultMap="EePolicyContentResult">
+        select c.*, p.policy_name from ee_policy_content c left join ee_policy p on c.policy_id = p.policy_id where c.policy_id = #{policyId}
+    </select>
+    <select id="selectAll" resultMap="EePolicyContentResult">
+        select c.*, p.policy_name from ee_policy_content c left join ee_policy p on c.policy_id = p.policy_id
+    </select>
+    <insert id="insert" parameterType="com.exemptenjoy.system.domain.EePolicyContent" useGeneratedKeys="true" keyProperty="contentId">
+        insert into ee_policy_content (policy_id, content_text, keywords, create_time) values (#{policyId}, #{contentText}, #{keywords}, now())
+    </insert>
+    <update id="updateByPolicyId" parameterType="com.exemptenjoy.system.domain.EePolicyContent">
+        update ee_policy_content set content_text = #{contentText}, keywords = #{keywords}, update_time = now() where policy_id = #{policyId}
+    </update>
+    <delete id="deleteByPolicyId" parameterType="Long">
+        delete from ee_policy_content where policy_id = #{policyId}
+    </delete>
+</mapper>

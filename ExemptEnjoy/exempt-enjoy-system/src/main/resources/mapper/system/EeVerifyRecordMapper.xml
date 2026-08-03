@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exemptenjoy.system.mapper.EeVerifyRecordMapper">
+
+    <resultMap type="com.exemptenjoy.system.domain.EeVerifyRecord" id="EeVerifyRecordResult">
+        <id     property="recordId"       column="record_id"       />
+        <result property="userId"         column="user_id"         />
+        <result property="verifyType"     column="verify_type"     />
+        <result property="verifyResult"   column="verify_result"   />
+        <result property="verifyContent"  column="verify_content"  />
+        <result property="verifyNo"       column="verify_no"       />
+        <result property="ipAddress"      column="ip_address"      />
+        <result property="createTime"     column="create_time"     />
+    </resultMap>
+
+    <insert id="insertEeVerifyRecord" parameterType="com.exemptenjoy.system.domain.EeVerifyRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into ee_verify_record(user_id, verify_type, verify_result, verify_content, verify_no, ip_address, create_time)
+        values(#{userId}, #{verifyType}, #{verifyResult}, #{verifyContent}, #{verifyNo}, #{ipAddress}, sysdate())
+    </insert>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="EeVerifyRecordResult">
+        select record_id, user_id, verify_type, verify_result, verify_content, verify_no, ip_address, create_time
+        from ee_verify_record where user_id = #{userId} order by create_time desc
+    </select>
+
+    <select id="selectByVerifyType" parameterType="String" resultMap="EeVerifyRecordResult">
+        select record_id, user_id, verify_type, verify_result, verify_content, verify_no, ip_address, create_time
+        from ee_verify_record where verify_type = #{verifyType} order by create_time desc
+    </select>
+
+</mapper>

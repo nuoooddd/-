@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exemptenjoy.system.mapper.EeFundMapper">
+    <resultMap type="EeFund" id="EeFundResult">
+        <result property="fundId" column="fund_id" />
+        <result property="policyId" column="policy_id" />
+        <result property="totalBudget" column="total_budget" />
+        <result property="usedAmount" column="used_amount" />
+        <result property="policyName" column="policy_name" />
+    </resultMap>
+    <select id="selectEeFundList" parameterType="EeFund" resultMap="EeFundResult">
+        select f.fund_id, f.policy_id, f.total_budget, f.used_amount,
+               p.policy_name as policy_name
+        from ee_fund f
+        left join ee_policy p on f.policy_id = p.policy_id
+        <where>
+            <if test="fundId != null"> and f.fund_id = #{fundId}</if>
+            <if test="policyId != null"> and f.policy_id = #{policyId}</if>
+        </where>
+        order by f.fund_id
+    </select>
+    <select id="selectEeFundByFundId" parameterType="Long" resultMap="EeFundResult">
+        select f.fund_id, f.policy_id, f.total_budget, f.used_amount,
+               p.policy_name as policy_name
+        from ee_fund f
+        left join ee_policy p on f.policy_id = p.policy_id
+        where f.fund_id = #{fundId}
+    </select>
+    <insert id="insertEeFund" parameterType="EeFund" useGeneratedKeys="true" keyProperty="fundId">
+        insert into ee_fund
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="policyId != null">policy_id,</if>
+            <if test="totalBudget != null">total_budget,</if>
+            <if test="usedAmount != null">used_amount,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="policyId != null">#{policyId},</if>
+            <if test="totalBudget != null">#{totalBudget},</if>
+            <if test="usedAmount != null">#{usedAmount},</if>
+        </trim>
+    </insert>
+    <update id="updateEeFund" parameterType="EeFund">
+        update ee_fund
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="policyId != null">policy_id = #{policyId},</if>
+            <if test="totalBudget != null">total_budget = #{totalBudget},</if>
+            <if test="usedAmount != null">used_amount = #{usedAmount},</if>
+        </trim>
+        where fund_id = #{fundId}
+    </update>
+    <delete id="deleteEeFundByFundIds" parameterType="String">
+        delete from ee_fund where fund_id in 
+        <foreach item="fundId" collection="array" open="(" separator="," close=")">
+            #{fundId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exemptenjoy.system.mapper.EeAuditRecordMapper">
+
+    <resultMap type="com.exemptenjoy.system.domain.EeAuditRecord" id="EeAuditRecordResult">
+        <id     property="recordId"      column="record_id"       />
+        <result property="userId"        column="user_id"         />
+        <result property="auditType"     column="audit_type"      />
+        <result property="auditStatus"   column="audit_status"    />
+        <result property="auditBy"       column="audit_by"        />
+        <result property="auditByName"   column="audit_by_name"   />
+        <result property="auditRemark"   column="audit_remark"    />
+        <result property="idCardFront"   column="id_card_front"   />
+        <result property="idCardBack"    column="id_card_back"    />
+        <result property="createTime"    column="create_time"     />
+        <result property="auditTime"     column="audit_time"      />
+        <result property="userName"      column="user_name"       />
+        <result property="realName"      column="real_name"       />
+        <result property="phonenumber"   column="phonenumber"     />
+    </resultMap>
+
+    <insert id="insertEeAuditRecord" parameterType="com.exemptenjoy.system.domain.EeAuditRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into ee_audit_record(user_id, audit_type, audit_status, id_card_front, id_card_back, create_time)
+        values(#{userId}, #{auditType}, #{auditStatus}, #{idCardFront}, #{idCardBack}, sysdate())
+    </insert>
+
+    <select id="selectAuditList" parameterType="com.exemptenjoy.system.domain.EeAuditRecord" resultMap="EeAuditRecordResult">
+        select r.record_id, r.user_id, r.audit_type, r.audit_status, r.audit_by, r.audit_by_name,
+               r.audit_remark, r.id_card_front, r.id_card_back, r.create_time, r.audit_time,
+               u.user_name, u.real_name, u.phonenumber
+        from ee_audit_record r
+        left join sys_user u on r.user_id = u.user_id
+        <where>
+            <if test="auditStatus != null and auditStatus != ''">
+                AND r.audit_status = #{auditStatus}
+            </if>
+            <if test="auditType != null and auditType != ''">
+                AND r.audit_type = #{auditType}
+            </if>
+            <if test="userId != null">
+                AND r.user_id = #{userId}
+            </if>
+        </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="selectAuditById" parameterType="Long" resultMap="EeAuditRecordResult">
+        select r.record_id, r.user_id, r.audit_type, r.audit_status, r.audit_by, r.audit_by_name,
+               r.audit_remark, r.id_card_front, r.id_card_back, r.create_time, r.audit_time,
+               u.user_name, u.real_name, u.phonenumber
+        from ee_audit_record r
+        left join sys_user u on r.user_id = u.user_id
+        where r.record_id = #{recordId}
+    </select>
+
+    <update id="updateAuditStatus" parameterType="com.exemptenjoy.system.domain.EeAuditRecord">
+        update ee_audit_record
+        set audit_status = #{auditStatus},
+            audit_by = #{auditBy},
+            audit_by_name = #{auditByName},
+            audit_remark = #{auditRemark},
+            audit_time = sysdate()
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteAuditById" parameterType="Long">
+        delete from ee_audit_record where record_id = #{recordId}
+    </delete>
+
+</mapper>

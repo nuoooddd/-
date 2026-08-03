@@ -1,0 +1,20 @@
+package com.exemptenjoy.common.enums;
+
+/**
+ * 操作状态
+ * 
+ * @author exempt-enjoy
+ *
+ */
+public enum BusinessStatus
+{
+    /**
+     * 成功
+     */
+    SUCCESS,
+
+    /**
+     * 失败
+     */
+    FAIL,
+}
